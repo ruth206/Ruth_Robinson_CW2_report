@@ -1,8 +1,9 @@
-from create_connection import make_connection  
+from create_connection import make_connection  #import to make a connection to the server
 
 conn = make_connection()  
 cursor = conn.cursor()
 
+#User table
 cursor.execute (''' 
     CREATE TABLE CW2.Users (
         UserID INT PRIMARY KEY,
@@ -14,6 +15,7 @@ cursor.execute ('''
 ''')
 print("users created")
 
+#trails table
 cursor.execute (''' 
     CREATE TABLE CW2.Trails (
         TrailID INT PRIMARY KEY,
@@ -31,6 +33,7 @@ cursor.execute ('''
 ''')
 print("trails table created")
 
+#trail location point table
 cursor.execute (''' 
     CREATE TABLE CW2.Trail_locationPt (
         TrailID INT,
@@ -41,6 +44,7 @@ cursor.execute ('''
 ''')
 print("trails locationpt created")
 
+#location point table
 cursor.execute (''' 
     CREATE TABLE CW2.Location_point (
         LocationPointID INT PRIMARY KEY, 
@@ -51,6 +55,7 @@ cursor.execute ('''
 ''')
 print("location point created")
 
+#trail feature table
 cursor.execute (''' 
     CREATE TABLE CW2.TrailFeature (
         TrailID INT,
@@ -60,6 +65,7 @@ cursor.execute ('''
 ''')
 print("trail features created")
 
+#feature table
 cursor.execute (''' 
     CREATE TABLE CW2.Feature (
         FeatureID INT PRIMARY KEY,  
@@ -67,7 +73,6 @@ cursor.execute ('''
     )
 ''')
 print("features created")
-
 
 conn.commit()
 conn.close()
