@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
 import requests
-from create_connection import make_connection  # Import to make a connection to the server
+from create_connection import make_connection  #Import to make a connection to the server
 
 app = Flask(__name__)
 
-# URL for the authenticator API
+
 auth_api_url = "https://web.socem.plymouth.ac.uk/COMP2001/auth/api/users"
 
-# Define a function to authenticate user credentials
+#function to verify users credentials
 def authenticate_user(email, password):
     auth_credentials = {
         "email": email,
@@ -16,18 +16,18 @@ def authenticate_user(email, password):
     
     response = requests.post(auth_api_url, json=auth_credentials)
     
-    # Checking if the login was successful
+    #checking to see if login was successful
     if response.status_code == 200:
         response_data = response.json()
-        print("Debug: Auth Response Data:", response_data)  # Debugging statement
+        print("Debug: Auth Response Data:", response_data)
         if isinstance(response_data, list) and 'Verified' in response_data and 'True' in response_data:
-            return True  # User is authenticated and verified
+            return True 
         else:
-            return False  # User verification failed
+            return False 
     else:
-        return False  # Authentication failed
+        return False 
 
-# Define a function to check if the user is an admin
+#function to see if the user is admin
 def is_admin_user(email, password):
     auth_credentials = {
         "email": email,
@@ -39,13 +39,13 @@ def is_admin_user(email, password):
     if response.status_code == 200:
         try:
             response_data = response.json()
-            print("Debug: Response Data Type:", type(response_data))  # Log the type of response data
-            print("Debug: Raw Response Data:", response_data)  # Log the raw response data
+            print("Debug: Response Data Type:", type(response_data))
+            print("debug: Response Data:", response_data)
             
-            # Define a list of admin users based on the provided accounts
+            #list of admin users
             admin_users = ["ada@plymouth.ac.uk", "tim@plymouth.ac.uk"]
             
-            # Check if response_data is a list and contains 'True'
+            
             if isinstance(response_data, list) and 'True' in response_data:
                 print("Debug: Response is a list containing 'True'")
                 # Check if the email is in the admin users list
@@ -62,20 +62,20 @@ def is_admin_user(email, password):
         print(f"Failed to authenticate. Status code: {response.status_code}, Response: {response.text}")
         return False
 
-# Create a trail (admin only)
+# Create a trail 
 @app.route('/trails', methods=['POST'])
 def add_trail():
     # Get user credentials
     email = request.json.get('email')
     password = request.json.get('password')
     
-    # Check if the user is an admin
+    #checking the user is admin
     if not is_admin_user(email, password):
         return jsonify({'error': 'Unauthorized - Admin access required'}), 401
 
     data = request.json
 
-    # Check if OwnerID exists
+    #Checking to see if OwnerID exists
     owner_id = data.get('owner_id')
     conn = make_connection()
     cursor = conn.cursor()
@@ -96,7 +96,7 @@ def add_trail():
     conn.close()
     return jsonify({'message': 'Trail added successfully'}), 201
 
-# View a trail (anyone can view)
+#Viewing a trail
 @app.route('/trails/<int:trail_id>', methods=['GET'])
 def get_trail(trail_id):
     try:
@@ -120,27 +120,27 @@ def get_trail(trail_id):
         print("Error:", e)
         return jsonify({'error': 'Internal server error'}), 500
 
-# Update a trail (admin only)
+#Updating a trail
 @app.route('/trails/<int:trail_id>', methods=['PUT'])
 def update_trail(trail_id):
-    # Get user credentials
+    
     email = request.json.get('email')
     password = request.json.get('password')
     
-    # Check if the user is an admin
+    
     if not is_admin_user(email, password):
         return jsonify({'error': 'Unauthorized - Admin access required'}), 401
     
     data = request.json
 
-    # Check if all keys are present in the request body
+    
     required_keys = ['trail_name', 'trail_summary', 'trail_description', 'difficulty', 'location', 
                      'length', 'elevation_gain', 'route_type', 'owner_id']
     for key in required_keys:
         if key not in data:
             return jsonify({'error': f'Missing key: {key}'}), 400
 
-    # Check if OwnerID exists
+    
     owner_id = data.get('owner_id')
     conn = make_connection()
     cursor = conn.cursor()
@@ -161,14 +161,14 @@ def update_trail(trail_id):
     conn.close()
     return jsonify({'message': 'Trail updated successfully'}), 200
 
-# Delete a trail (admin only)
+#Deleting a trail
 @app.route('/trails/<int:trail_id>', methods=['DELETE'])
 def delete_trail(trail_id):
     # Get user credentials
     email = request.json.get('email')
     password = request.json.get('password')
     
-    # Check if the user is an admin
+    
     if not is_admin_user(email, password):
         return jsonify({'error': 'Unauthorized - Admin access required'}), 401
     

@@ -1,5 +1,5 @@
 import bcrypt
-from create_connection import make_connection  # Import to make a connection to the server
+from create_connection import make_connection  #Import to make a connection to the server
 
 conn = make_connection()
 cursor = conn.cursor()
@@ -71,7 +71,7 @@ conn.commit()
 
 
 password = 'insecurePassword'
-hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')  # Hash the password with a generated salt and decode it to a string 
+hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')  #Hash the password with a generated salt and decode it to a string 
 
 cursor.execute('''
     EXEC CW2.AddUser

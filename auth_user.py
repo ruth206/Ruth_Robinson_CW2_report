@@ -3,7 +3,6 @@
 # URL for the authenticator API
 #auth_api_url = "https://web.socem.plymouth.ac.uk/COMP2001/auth/api/users"
 
-# Define a function to authenticate user credentials
 #def authenticate_user(email, password):
  #   auth_credentials = {
   #      "email": email,
@@ -23,7 +22,7 @@
     #else:
      #   return False  # Authentication failed
 
-# Define a function to check if the user is an admin
+
 #def is_admin_user(email, password):
  #   auth_credentials = {
   #      "email": email,

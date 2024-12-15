@@ -1,10 +1,10 @@
-from create_connection import make_connection  # Import to make a connection to the server
+from create_connection import make_connection  #Import to make a connection to the server
 
 def recreate_users_table():
     conn = make_connection()
     cursor = conn.cursor()
     
-    # Step 1: Create New_Users table with UserID as an auto-incrementing primary key
+    
     cursor.execute('''
         CREATE TABLE CW2.New_Users (
             UserID INT IDENTITY(1,1) PRIMARY KEY,
@@ -16,14 +16,14 @@ def recreate_users_table():
     ''')
     print("New_Users table created")
 
-    # Step 2: Copy data from Users to New_Users
+   
     cursor.execute('''
         INSERT INTO CW2.New_Users (EmailAddress, Username, Password, Role)
         SELECT EmailAddress, Username, Password, Role FROM CW2.Users
     ''')
     print("Data copied to New_Users table")
 
-    # Step 3: Fetch UserID mappings
+   
     cursor.execute('''
         SELECT Old.UserID AS OldUserID, New.UserID AS NewUserID
         FROM CW2.Users Old
@@ -35,7 +35,7 @@ def recreate_users_table():
     conn.autocommit = False
 
     try:
-        # Step 4: Disable foreign key constraints on related tables
+        
         cursor.execute('''
             ALTER TABLE CW2.Trails NOCHECK CONSTRAINT ALL
         ''')
@@ -47,7 +47,7 @@ def recreate_users_table():
         ''')
         print("Foreign key constraints on related tables disabled")
         
-        # Step 5: Update references in related tables
+        
         for mapping in user_id_mapping:
             cursor.execute(f'''
                 UPDATE CW2.Trails
@@ -56,19 +56,19 @@ def recreate_users_table():
             ''')
         print("OwnerID updated in Trails table")
 
-        # Step 6: Rename original Users table
+        
         cursor.execute('''
             EXEC sp_rename 'CW2.Users', 'Old_Users'
         ''')
         print("Original Users table renamed to Old_Users")
 
-        # Step 7: Rename New_Users table to Users
+        
         cursor.execute('''
             EXEC sp_rename 'CW2.New_Users', 'Users'
         ''')
         print("New_Users table renamed to Users")
 
-        # Step 8: Re-enable foreign key constraints on related tables
+       
         cursor.execute('''
             ALTER TABLE CW2.Trails CHECK CONSTRAINT ALL
         ''')
@@ -91,5 +91,5 @@ def recreate_users_table():
         conn.close()
         print("Connection closed")
 
-# Run the drop and recreate function
+
 recreate_users_table()
