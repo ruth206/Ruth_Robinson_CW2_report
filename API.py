@@ -1,8 +1,21 @@
 from flask import Flask, request, jsonify
 import requests
 from create_connection import make_connection  #Import to make a connection to the server
+from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
+
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.yaml'
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'trails' : "Trail API"
+    }
+)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 auth_api_url = "https://web.socem.plymouth.ac.uk/COMP2001/auth/api/users"

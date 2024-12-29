@@ -1,0 +1,129 @@
+swagger: "2.0"
+info:
+  title: "Trail API"
+  description: "API for managing trails"
+  version: "1.0.0"
+host: "localhost:5000"
+schemes:
+  - "http"
+paths:
+  /trails:
+    post:
+      summary: "Add a new trail"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+              trail_name:
+                type: "string"
+              trail_summary:
+                type: "string"
+              trail_description:
+                type: "string"
+              difficulty:
+                type: "string"
+              location:
+                type: "string"
+              length:
+                type: "number"
+              elevation_gain:
+                type: "number"
+              route_type:
+                type: "string"
+              owner_id:
+                type: "integer"
+      responses:
+        201:
+          description: "Trail added successfully"
+        400:
+          description: "Invalid OwnerID"
+        401:
+          description: "Unauthorized - Admin access required"
+  /trails/{trail_id}:
+    get:
+      summary: "Get a trail by ID"
+      parameters:
+        - name: "trail_id"
+          in: "path"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successful response"
+        404:
+          description: "Trail not found"
+    put:
+      summary: "Update a trail"
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "trail_id"
+          in: "path"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+              trail_name:
+                type: "string"
+              trail_summary:
+                type: "string"
+              trail_description:
+                type: "string"
+              difficulty:
+                type: "string"
+              location:
+                type: "string"
+              length:
+                type: "number"
+              elevation_gain:
+                type: "number"
+              route_type:
+                type: "string"
+              owner_id:
+                type: "integer"
+      responses:
+        200:
+          description: "Trail updated successfully"
+        400:
+          description: "Invalid OwnerID"
+        401:
+          description: "Unauthorized - Admin access required"
+    delete:
+      summary: "Delete a trail"
+      parameters:
+        - name: "trail_id"
+          in: "path"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+      responses:
+        200:
+          description: "Trail deleted successfully"
+        401:
+          description: "Unauthorized - Admin access required"
